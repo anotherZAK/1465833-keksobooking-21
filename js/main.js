@@ -3,43 +3,64 @@
 const NUMBER_OF_ADVERTISEMENT = 8;
 
 /**
- * выбирает случайный индекс массива или случайное число из заданного диапазона
- * @param {Array, number} arrayOrNumber - исходный массив или верхний диапазон
- * @param {number} min - диапазон
- * @return {number} - случайный индекс или случайное число
+ * выбирает случайное число из заданного диапазона
+ * @param {*} max - верхний предел
+ * @param {*} min - нижний предел
+ * @return {number} - случайное число
  */
-
-const getRandomNumber = function (arrayOrNumber, min = 0) {
+const getRandomNumber = function (max, min = 0) {
   let randomNumber = 0;
-
-  if (typeof (arrayOrNumber) === `number`) {
-    randomNumber = Math.floor(Math.random() * arrayOrNumber);
-  } else {
-    const arrayLength = arrayOrNumber.length;
-    randomNumber = Math.floor(Math.random() * (arrayLength - min)) + min;
-  }
+  randomNumber = Math.floor(Math.random() * (max - min)) + min;
 
   return randomNumber;
 };
 
 /**
- * выбирает случайный элемент из массива
- * @param {Array} array - исходный массив
- * @return {string} - случайный элемент массива
+ * выбирает случайный индекс массива
+ * @param {Array} array - исходный массив или верхний диапазон
+ * @param {number} min - диапазон
+ * @return {number} - случайный индекс
  */
 
+const getRandomIndex = function (array) {
+  let randomIndex = 0;
+  const arrayLength = array.length;
+  randomIndex = Math.floor(Math.random() * arrayLength);
+
+  return randomIndex;
+};
+
+/**
+ * перемешивает массив по алгоритму Фишера-Йетса
+ * @param {Array} array - исходный массив
+ * @return {Array} - перемешанный массив
+ */
+const shuffleArray = function (array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let k = array[i];
+    array[i] = array[j];
+    array[j] = k;
+  }
+  return array;
+};
+
+/**
+ * выбирает случайный элемент из массива
+ * @param {Array} array - исходный массив
+ * @return {*} - случайный элемент массива
+ */
 const getRandomElementFromArray = function (array) {
-  return array[getRandomNumber(array)];
+  return array[getRandomIndex(array)];
 };
 
 /**
  * формирует моки для тестирования
- * @param {number} indexNumber - порядковый индекс
+ * @param {number} indexNumber - порядковый индекс изображений
  * @return {Object} - объект с данными объявления
  */
-
 const generateMockData = function (indexNumber) {
-  const ADVERTISEMENT_DATA = {
+  const AdevertisementData = {
     TITLES: [
       `Старинный дворец`,
       `Обычная квартира`,
@@ -56,26 +77,18 @@ const generateMockData = function (indexNumber) {
       `house`,
       `bungalow`
     ],
-    ADDRESS: [
-      `650`,
-      `350`
-    ],
     ROOMS: [
       1,
       2,
-      3
+      3,
+      100
     ],
     GUESTS: [
       1,
       2,
       3
     ],
-    CHECKIN: [
-      `12:00`,
-      `13:00`,
-      `14:00`
-    ],
-    CHECKOUT: [
+    CHECKINOUT: [
       `12:00`,
       `13:00`,
       `14:00`
@@ -90,7 +103,7 @@ const generateMockData = function (indexNumber) {
     ],
     DESCRIPTION: [
       `Для ценителей истории и роскоши`,
-      `Уютная и небольшае жилплощадь`,
+      `Уютная и небольшая жилплощадь`,
       `Двухкомнатная квартира с евроремонтом`,
       `Стильный дом по индивидуальному архитектурному проекту`,
       `Условия проживания неприхотливые. Протекает крыша`,
@@ -111,35 +124,37 @@ const generateMockData = function (indexNumber) {
     Y_SHIFT: 70,
 
     generateAdvertisementData() {
-      let advertisementData = {};
-      advertisementData.author = {};
-      advertisementData.offer = {};
-      advertisementData.location = {};
-
-      advertisementData.author.avatar = `img/avatars/user0${indexNumber}.png`;
-      advertisementData.offer.title = getRandomElementFromArray(ADVERTISEMENT_DATA.TITLES);
-      advertisementData.offer.address = `${ADVERTISEMENT_DATA.ADDRESS[0]}, ${ADVERTISEMENT_DATA.ADDRESS[1]}`;
-      advertisementData.offer.price = getRandomNumber(ADVERTISEMENT_DATA.PRICE_MAX);
-      advertisementData.offer.type = getRandomElementFromArray(ADVERTISEMENT_DATA.TYPES);
-      advertisementData.offer.rooms = getRandomElementFromArray(ADVERTISEMENT_DATA.ROOMS);
-      advertisementData.offer.guests = getRandomElementFromArray(ADVERTISEMENT_DATA.GUESTS);
-      advertisementData.offer.checkin = getRandomElementFromArray(ADVERTISEMENT_DATA.CHECKIN);
-      advertisementData.offer.checkout = getRandomElementFromArray(ADVERTISEMENT_DATA.CHECKOUT);
-      advertisementData.offer.features = ADVERTISEMENT_DATA.FEATURES.slice(getRandomNumber(ADVERTISEMENT_DATA.FEATURES));
-      advertisementData.offer.description = getRandomElementFromArray(ADVERTISEMENT_DATA.DESCRIPTION);
-      advertisementData.offer.photos = ADVERTISEMENT_DATA.PHOTOS.slice(getRandomNumber(ADVERTISEMENT_DATA.PHOTOS));
-      advertisementData.location.x = getRandomNumber(ADVERTISEMENT_DATA.X_MAX - ADVERTISEMENT_DATA.X_SHIFT);
-      advertisementData.location.y = getRandomNumber(ADVERTISEMENT_DATA.Y_MAX, ADVERTISEMENT_DATA.Y_MIN);
-
-      return advertisementData;
+      let locationX = getRandomNumber(AdevertisementData.X_MAX - AdevertisementData.X_SHIFT);
+      let locationY = getRandomNumber(AdevertisementData.Y_MAX, AdevertisementData.Y_MIN);
+      return {
+        author: {
+          avatar: `img/avatars/user0${indexNumber}.png`,
+        },
+        location: {
+          x: locationX,
+          y: locationY
+        },
+        offer: {
+          title: getRandomElementFromArray(AdevertisementData.TITLES),
+          price: getRandomNumber(AdevertisementData.PRICE_MAX),
+          type: getRandomElementFromArray(AdevertisementData.TYPES),
+          rooms: getRandomElementFromArray(AdevertisementData.ROOMS),
+          guests: getRandomElementFromArray(AdevertisementData.GUESTS),
+          checkin: getRandomElementFromArray(AdevertisementData.CHECKINOUT),
+          checkout: getRandomElementFromArray(AdevertisementData.CHECKINOUT),
+          features: shuffleArray(AdevertisementData.FEATURES).slice(getRandomIndex(AdevertisementData.FEATURES)),
+          description: getRandomElementFromArray(AdevertisementData.DESCRIPTION),
+          photos: AdevertisementData.PHOTOS.slice(getRandomIndex(AdevertisementData.PHOTOS)),
+          address: `${locationX} ${locationY}`
+        }
+      };
     }
   };
-  return ADVERTISEMENT_DATA.generateAdvertisementData();
+  return AdevertisementData.generateAdvertisementData();
 };
 
-const mapBlock = document.querySelector(`.map`);
-mapBlock.classList.remove(`map--faded`);
 
+      
 const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
 const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
 
@@ -149,7 +164,7 @@ const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.ma
  * @return {Object} - объект html-разметки с модифицированными данными объявления
  */
 
-const makeHtmlAnnouncement = function (announcement) {
+  const makeHtmlAnnouncement = function (announcement) {
   const announcementElement = similarAdvertisementItem.cloneNode(true);
   const announcementImg = announcementElement.querySelector(`img`);
 
@@ -181,16 +196,102 @@ const generateAnnouncement = function (numberOfAnnouncement) {
  * @return {Object} - объект с новой разметкой, содержащей разметку объектов - объявлений
  */
 
-const incarnateAnnouncements = function (announcements) {
+const renderPins = function (announcements) {
   const mapPins = document.querySelector(`.map__pins`);
   const pinsContainer = document.createDocumentFragment();
+  announcements.forEach(function (item) {
+    pinsContainer.appendChild(makeHtmlAnnouncement(item));
+  });
 
-  for (let i = 0; i < announcements.length; i++) {
-    pinsContainer.appendChild(makeHtmlAnnouncement(announcements[i]));
-  }
   return mapPins.appendChild(pinsContainer);
 };
 
 const advertisement = generateAnnouncement(NUMBER_OF_ADVERTISEMENT);
-incarnateAnnouncements(advertisement);
+renderPins(advertisement);
 
+const fieldsetElements = document.querySelectorAll(`.ad-form__element`);
+const mapFilters = document.querySelectorAll(`.map__filter`);
+const mapFeatures = document.querySelector(`.map__features`);
+const mapBlock = document.querySelector(`.map`);
+
+/**
+ * переключает страницу между активным и неактивным состоянием
+ * @param {boolean} flag - признак переключения
+ */
+const changeState = function (flag) {
+  if (flag) {
+    fieldsetElements.forEach(function (item) {
+      item.removeAttribute(`disabled`);
+    });
+    mapFilters.forEach(function (item) {
+      item.removeAttribute(`disabled`);
+    });
+    mapFeatures.removeAttribute(`disabled`);
+    mapBlock.classList.remove(`map--faded`);
+  } else {
+    fieldsetElements.forEach(function (item) {
+      item.setAttribute(`disabled`, `disabled`);
+    });
+    mapFilters.forEach(function (item) {
+      item.setAttribute(`disabled`, `disabled`);
+    });
+    mapFeatures.setAttribute(`disabled`, `disabled`);
+    mapBlock.classList.add(`map--faded`);
+  }
+};
+
+changeState(false);
+
+const mapPinMain = document.querySelector(`.map__pin--main`);
+
+const MAP_PIN_X_OFFSET = Math.floor(window.getComputedStyle(mapPinMain).width.replace(/[^0-9]/g, ``) / 2);
+const MAP_PIN_Y_OFFSET = Math.floor(window.getComputedStyle(mapPinMain).height.replace(/[^0-9]/g, ``) / 2);
+const MAP_PIN_ACTIVE_Y_OFFSET = 22;
+const ADDRESS_X = Number(mapPinMain.style.left.replace(/[^0-9]/g, ``)) + MAP_PIN_X_OFFSET;
+const ADDRESS_Y = Number(mapPinMain.style.top.replace(/[^0-9]/g, ``)) + MAP_PIN_Y_OFFSET;
+
+const addressInput = document.querySelector(`input[name="address"]`);
+addressInput.value = `${ADDRESS_X} ${ADDRESS_Y}`;
+
+mapPinMain.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    changeState(true);
+    addressInput.value = `${ADDRESS_X} ${ADDRESS_Y + MAP_PIN_ACTIVE_Y_OFFSET}`;
+  }
+});
+
+mapPinMain.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    changeState(true);
+    addressInput.value = `${ADDRESS_X} ${ADDRESS_Y + MAP_PIN_ACTIVE_Y_OFFSET}`;
+  }
+});
+
+const roomsInput = document.querySelector(`select[name="rooms"]`);
+const capacityInput = document.querySelector(`select[name="capacity"]`);
+
+const GUESTS_CAPACITY = {
+  1: [`1`],
+  2: [`1`, `2`],
+  3: [`1`, `2`, `3`],
+  100: [`0`]
+};
+
+/**
+ * проверяет, сколько гостей можно пригласить
+ */
+const checkGuestsCapacity = function () {
+  if (GUESTS_CAPACITY[roomsInput.value].includes(capacityInput.value)) {
+    capacityInput.setCustomValidity(``);
+  } else {
+    capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
+  }
+};
+
+capacityInput.addEventListener(`change`, function () {
+  checkGuestsCapacity();
+});
+
+roomsInput.addEventListener(`change`, function () {
+  checkGuestsCapacity();
+});
