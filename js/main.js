@@ -142,9 +142,9 @@ const generateMockData = function (indexNumber) {
           guests: getRandomElementFromArray(AdevertisementData.GUESTS),
           checkin: getRandomElementFromArray(AdevertisementData.CHECKINOUT),
           checkout: getRandomElementFromArray(AdevertisementData.CHECKINOUT),
-          features: shuffleArray(AdevertisementData.FEATURES).slice(getRandomNumber(AdevertisementData.FEATURES)),
+          features: shuffleArray(AdevertisementData.FEATURES).slice(getRandomIndex(AdevertisementData.FEATURES)),
           description: getRandomElementFromArray(AdevertisementData.DESCRIPTION),
-          photos: AdevertisementData.PHOTOS.slice(getRandomNumber(AdevertisementData.PHOTOS)),
+          photos: AdevertisementData.PHOTOS.slice(getRandomIndex(AdevertisementData.PHOTOS)),
           address: `${locationX} ${locationY}`
         }
       };
@@ -265,20 +265,21 @@ mapPinMain.addEventListener(`keydown`, function (evt) {
 const roomsInput = document.querySelector(`select[name="rooms"]`);
 const capacityInput = document.querySelector(`select[name="capacity"]`);
 
+const GUESTS_CAPACITY = {
+  1: [`1`],
+  2: [`1`, `2`],
+  3: [`1`, `2`, `3`],
+  100: [`0`]
+};
+
 /**
  * проверяет, сколько гостей можно пригласить
  */
 const checkGuestsCapacity = function () {
-  if (roomsInput.value === `1` && capacityInput.value !== `1`) {
-    capacityInput.setCustomValidity(`Возможно выбрать только для одного гостя`);
-  } else if (roomsInput.value === `2` && capacityInput.value !== `1` && capacityInput.value !== `2`) {
-    capacityInput.setCustomValidity(`Возможно выбрать для одного или для двух гостей`);
-  } else if (roomsInput.value === `3` && capacityInput.value === `0`) {
-    capacityInput.setCustomValidity(`Возможно выбрать для одного, двух или для трёх гостей`);
-  } else if (roomsInput.value === `100` && capacityInput.value !== `0`) {
-    capacityInput.setCustomValidity(`Этот вариант не для гостей`);
-  } else {
+  if (GUESTS_CAPACITY[roomsInput.value].includes(capacityInput.value)) {
     capacityInput.setCustomValidity(``);
+  } else {
+    capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
   }
 };
 
