@@ -153,6 +153,8 @@ const generateMockData = function (indexNumber) {
   return AdevertisementData.generateAdvertisementData();
 };
 
+
+      
 const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
 const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
 
@@ -161,7 +163,8 @@ const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.ma
  * @param {Object} announcement - исходный объект с данными объявления
  * @return {Object} - объект html-разметки с модифицированными данными объявления
  */
-const makeHtmlAnnouncement = function (announcement) {
+
+  const makeHtmlAnnouncement = function (announcement) {
   const announcementElement = similarAdvertisementItem.cloneNode(true);
   const announcementImg = announcementElement.querySelector(`img`);
 
@@ -177,6 +180,7 @@ const makeHtmlAnnouncement = function (announcement) {
  * @param {number} numberOfAnnouncement - количество объявлений
  * @return {Array} - массив с объектами - объявлениями
  */
+
 const generateAnnouncement = function (numberOfAnnouncement) {
   let announcementData = [];
   for (let i = 0; i < numberOfAnnouncement; i++) {
@@ -191,6 +195,7 @@ const generateAnnouncement = function (numberOfAnnouncement) {
  * @param {Array} announcements - исходный массив с объектами - объявлениями
  * @return {Object} - объект с новой разметкой, содержащей разметку объектов - объявлений
  */
+
 const renderPins = function (announcements) {
   const mapPins = document.querySelector(`.map__pins`);
   const pinsContainer = document.createDocumentFragment();
