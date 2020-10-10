@@ -130,6 +130,7 @@
 
   const mapPins = document.querySelector(`.map__pins`);
 
+
   /**
    * отображает данные (похожие объявления) при успешной загрузке
    * @param {Array} announcements - массив объектов с данными
@@ -141,13 +142,12 @@
       pinsContainer.appendChild(makeHtmlAnnouncement(item));
       pinsContainer.appendChild(makeHtmlPopup(item));
     });
-
     mapPins.appendChild(pinsContainer);
   };
 
   /**
    * отображает сообщение при неуспешной загрузке данных
-   * @param {*} errorMessage - сообщение
+   * @param {String} errorMessage - сообщение
    */
   const errorHandlerLoad = function (errorMessage) {
     const node = document.createElement(`div`);
