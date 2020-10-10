@@ -128,36 +128,40 @@
     return popupElement;
   };
 
-  /**
-   * создаёт массив объектов с данными объявлений
-   * @param {number} numberOfAnnouncement - количество объявлений
-   * @return {Array} - массив с объектами - объявлениями
-   */
-  const generateAnnouncement = function (numberOfAnnouncement) {
-    let announcementData = [];
-    for (let i = 0; i < numberOfAnnouncement; i++) {
-      announcementData[i] = window.data.generateMockData(i + 1);
-    }
-
-    return announcementData;
-  };
+  const mapPins = document.querySelector(`.map__pins`);
 
   /**
-   * добавляет объявления в разметку документа
-   * @param {Array} announcements - исходный массив с объектами - объявлениями
-   * @return {Object} - объект с новой разметкой, содержащей разметку объектов - объявлений
+   * отображает данные (похожие объявления) при успешной загрузке
+   * @param {Array} announcements - массив объектов с данными
    */
-  const renderPins = function (announcements) {
-    const mapPins = document.querySelector(`.map__pins`);
+  const successHandlerLoad = function (announcements) {
     const pinsContainer = document.createDocumentFragment();
+
     announcements.forEach(function (item) {
       pinsContainer.appendChild(makeHtmlAnnouncement(item));
       pinsContainer.appendChild(makeHtmlPopup(item));
     });
 
-    return mapPins.appendChild(pinsContainer);
+    mapPins.appendChild(pinsContainer);
   };
 
-  const advertisement = generateAnnouncement(window.data.NUMBER_OF_ADVERTISEMENT);
-  renderPins(advertisement);
+  /**
+   * отображает сообщение при неуспешной загрузке данных
+   * @param {*} errorMessage - сообщение
+   */
+  const errorHandlerLoad = function (errorMessage) {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 1; margin: 0 auto; text-align: center; background-color: tomato; border-width: 3px; border-style: solid; border-color: red;`;
+    node.style.fontSize = `22px`;
+    node.style.position = `fixed`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontWeight = `bold`;
+    node.textContent = errorMessage;
+
+    mapPins.appendChild(node);
+
+  };
+
+  window.backend.load(successHandlerLoad, errorHandlerLoad);
 }());
