@@ -3,7 +3,7 @@
 (function () {
   const load = function (onSuccess, onError) {
     const URL = `https://21.javascript.pages.academy/keksobooking/data`;
-    const TIMEOUT = 1000;
+    const TIMEOUT = 1500;
     const StatusCode = {
       OK: 200
     };
@@ -17,8 +17,6 @@
     xhr.addEventListener(`load`, function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
-        // eslint-disable-next-line no-console
-        console.log(xhr.response);
       } else {
         onError(`Данные не загружены. Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }

@@ -128,8 +128,53 @@
     return popupElement;
   };
 
-  const mapPins = document.querySelector(`.map__pins`);
+  const map = document.querySelector(`.map__pins`);
 
+  /**
+   * отрисовывает карточки объявлений
+   * @param {Object} evt - объект-события
+   * @param {*} announcements - массив объектов с данными
+   */
+  const renderCards = function (evt, announcements) {
+    let mapCard = map.querySelector(`.map__card`);
+    const cardContainer = document.createDocumentFragment();
+
+    if (evt.target.classList.value === similarAdvertisementItem.classList.value) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.firstChild.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
+    } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
+    }
+    map.appendChild(cardContainer);
+
+    const cardCloseButton = map.querySelector(`.popup__close`);
+
+    if (cardCloseButton) {
+      cardCloseButton.addEventListener(`click`, function () {
+        mapCard = map.querySelector(`.map__card`);
+        if (mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+      document.addEventListener(`keydown`, function (event) {
+        mapCard = map.querySelector(`.map__card`);
+        if (event.key === `Escape` && mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+    }
+  };
   /**
    * отображает данные (похожие объявления) при успешной загрузке
    * @param {Array} announcements - массив объектов с данными
@@ -139,10 +184,19 @@
 
     announcements.forEach(function (item) {
       pinsContainer.appendChild(makeHtmlAnnouncement(item));
-      pinsContainer.appendChild(makeHtmlPopup(item));
+      // pinsContainer.appendChild(makeHtmlPopup(item));
     });
 
-    mapPins.appendChild(pinsContainer);
+    map.appendChild(pinsContainer);
+
+    map.addEventListener(`click`, function (evt) {
+      renderCards(evt, announcements);
+    });
+    map.addEventListener(`keydown`, function (evt) {
+      if (evt.key === `Enter`) {
+        renderCards(evt, announcements);
+      }
+    });
   };
 
   /**
@@ -159,8 +213,7 @@
     node.style.fontWeight = `bold`;
     node.textContent = errorMessage;
 
-    mapPins.appendChild(node);
-
+    map.appendChild(node);
   };
 
   window.backend.load(successHandlerLoad, errorHandlerLoad);
