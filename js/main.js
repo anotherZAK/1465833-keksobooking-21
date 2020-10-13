@@ -128,36 +128,93 @@
     return popupElement;
   };
 
+  const map = document.querySelector(`.map__pins`);
+
   /**
-   * создаёт массив объектов с данными объявлений
-   * @param {number} numberOfAnnouncement - количество объявлений
-   * @return {Array} - массив с объектами - объявлениями
+   * отрисовывает карточки объявлений
+   * @param {Object} evt - объект-события
+   * @param {*} announcements - массив объектов с данными
    */
-  const generateAnnouncement = function (numberOfAnnouncement) {
-    let announcementData = [];
-    for (let i = 0; i < numberOfAnnouncement; i++) {
-      announcementData[i] = window.data.generateMockData(i + 1);
+  const renderCards = function (evt, announcements) {
+    let mapCard = map.querySelector(`.map__card`);
+    const cardContainer = document.createDocumentFragment();
+
+    if (evt.target.classList.value === similarAdvertisementItem.classList.value) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.firstChild.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
+    } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
     }
+    map.appendChild(cardContainer);
 
-    return announcementData;
+    const cardCloseButton = map.querySelector(`.popup__close`);
+
+    if (cardCloseButton) {
+      cardCloseButton.addEventListener(`click`, function () {
+        mapCard = map.querySelector(`.map__card`);
+        if (mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+      document.addEventListener(`keydown`, function (event) {
+        mapCard = map.querySelector(`.map__card`);
+        if (event.key === `Escape` && mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+    }
   };
-
   /**
-   * добавляет объявления в разметку документа
-   * @param {Array} announcements - исходный массив с объектами - объявлениями
-   * @return {Object} - объект с новой разметкой, содержащей разметку объектов - объявлений
+   * отображает данные (похожие объявления) при успешной загрузке
+   * @param {Array} announcements - массив объектов с данными
    */
-  const renderPins = function (announcements) {
-    const mapPins = document.querySelector(`.map__pins`);
+  const successHandlerLoad = function (announcements) {
     const pinsContainer = document.createDocumentFragment();
+
     announcements.forEach(function (item) {
       pinsContainer.appendChild(makeHtmlAnnouncement(item));
-      pinsContainer.appendChild(makeHtmlPopup(item));
+      // pinsContainer.appendChild(makeHtmlPopup(item));
     });
 
-    return mapPins.appendChild(pinsContainer);
+    map.appendChild(pinsContainer);
+
+    map.addEventListener(`click`, function (evt) {
+      renderCards(evt, announcements);
+    });
+    map.addEventListener(`keydown`, function (evt) {
+      if (evt.key === `Enter`) {
+        renderCards(evt, announcements);
+      }
+    });
   };
 
-  const advertisement = generateAnnouncement(window.data.NUMBER_OF_ADVERTISEMENT);
-  renderPins(advertisement);
+  /**
+   * отображает сообщение при неуспешной загрузке данных
+   * @param {*} errorMessage - сообщение
+   */
+  const errorHandlerLoad = function (errorMessage) {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 1; margin: 0 auto; text-align: center; background-color: tomato; border-width: 3px; border-style: solid; border-color: red;`;
+    node.style.fontSize = `22px`;
+    node.style.position = `fixed`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontWeight = `bold`;
+    node.textContent = errorMessage;
+
+    map.appendChild(node);
+  };
+
+  window.backend.load(successHandlerLoad, errorHandlerLoad);
 }());
