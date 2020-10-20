@@ -69,11 +69,57 @@
     }
   };
 
+
   mapPinMain.addEventListener(`mousedown`, onMapPinClick);
   mapPinMain.addEventListener(`keydown`, onMapPinKeyPress);
 
   const mapPins = document.querySelector(`.map__pins`);
 
+  /**
+   * отрисовывает карточки объявлений
+   * @param {Object} evt - объект-события
+   * @param {*} announcements - массив объектов с данными
+   */
+  const renderCards = function (evt, announcements) {
+    let mapCard = map.querySelector(`.map__card`);
+    const cardContainer = document.createDocumentFragment();
+
+    if (evt.target.classList.value === similarAdvertisementItem.classList.value) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.firstChild.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
+    } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
+      if (mapCard) {
+        map.removeChild(mapCard);
+      }
+      let index = announcements.findIndex(function (item) {
+        return item.offer.title === evt.target.alt;
+      });
+      cardContainer.appendChild(makeHtmlPopup(announcements[index]));
+    }
+    map.appendChild(cardContainer);
+
+    const cardCloseButton = map.querySelector(`.popup__close`);
+
+    if (cardCloseButton) {
+      cardCloseButton.addEventListener(`click`, function () {
+        mapCard = map.querySelector(`.map__card`);
+        if (mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+      document.addEventListener(`keydown`, function (event) {
+        mapCard = map.querySelector(`.map__card`);
+        if (event.key === `Escape` && mapCard) {
+          map.removeChild(mapCard);
+        }
+      });
+    }
+  };
   /**
    * отображает данные (похожие объявления) при успешной загрузке
    * @param {Array} announcements - массив объектов с данными

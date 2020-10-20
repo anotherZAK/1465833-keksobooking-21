@@ -3,7 +3,7 @@
 (function () {
   const load = function (onSuccess, onError) {
     const URL = `https://21.javascript.pages.academy/keksobooking/data`;
-    const TIMEOUT = 1000;
+    const TIMEOUT = 1500;
     const StatusCode = {
       OK: 200
     };
