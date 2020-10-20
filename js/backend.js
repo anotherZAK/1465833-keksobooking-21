@@ -17,8 +17,6 @@
     xhr.addEventListener(`load`, function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
-        // eslint-disable-next-line no-console
-        console.log(xhr.response);
       } else {
         onError(`Данные не загружены. Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }
