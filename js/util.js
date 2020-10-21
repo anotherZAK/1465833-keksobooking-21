@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
-/**
+
+  /**
  * выбирает случайное число из заданного диапазона
- * @param {*} max - верхний предел
- * @param {*} min - нижний предел
+ * @param {number} max - верхний предел
+ * @param {number} min - нижний предел
  * @return {number} - случайное число
  */
   const getRandomNumber = function (max, min = 0) {
@@ -47,7 +48,7 @@
   /**
    * выбирает случайный элемент из массива
    * @param {Array} array - исходный массив
-   * @return {*} - случайный элемент массива
+   * @return {number} - случайный элемент массива
    */
   const getRandomElementFromArray = function (array) {
     return array[getRandomIndex(array)];
