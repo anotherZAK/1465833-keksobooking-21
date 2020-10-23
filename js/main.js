@@ -1,53 +1,17 @@
 'use strict';
 
 (function () {
-  const AD_FORM_ELEMENTS = [
-    `.ad-form__element`,
-    `.ad-form-header`,
-  ];
 
   const MAP_FILTER_ELEMENTS = [
     `.map__filter`,
     `.map__features`
   ];
 
-  const mapBlock = document.querySelector(`.map`);
-  const adForm = document.querySelector(`.ad-form`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
-  const adFormElements = document.querySelectorAll(AD_FORM_ELEMENTS);
+  const mapPins = document.querySelector(`.map__pins`);
   const mapFormElements = document.querySelectorAll(MAP_FILTER_ELEMENTS);
 
-  /**
-  * переключает страницу между активным и неактивным состоянием
-  * @param {boolean} flag - признак переключения
-  */
-  const changeState = function (flag) {
-    if (flag) {
-      adFormElements.forEach(function (item) {
-        item.removeAttribute(`disabled`);
-      });
-      mapBlock.classList.remove(`map--faded`);
-      adForm.classList.remove(`ad-form--disabled`);
-      mapPinMain.removeEventListener(`mousedown`, onMapPinClick);
-      mapPinMain.removeEventListener(`keydown`, onMapPinKeyPress);
-    } else {
-      adFormElements.forEach(function (item) {
-        item.setAttribute(`disabled`, `disabled`);
-      });
-      mapBlock.classList.add(`map--faded`);
-    }
-  };
-
-  changeState(false);
-
-  const MAP_PIN_X_OFFSET = Math.floor(window.getComputedStyle(mapPinMain).width.replace(/[^0-9]/g, ``) / 2);
-  const MAP_PIN_Y_OFFSET = Math.floor(window.getComputedStyle(mapPinMain).height.replace(/[^0-9]/g, ``) / 2);
-  const MAP_PIN_ACTIVE_Y_OFFSET = 22;
-  const ADDRESS_X = Number(mapPinMain.style.left.replace(/[^0-9]/g, ``)) + MAP_PIN_X_OFFSET;
-  const ADDRESS_Y = Number(mapPinMain.style.top.replace(/[^0-9]/g, ``)) + MAP_PIN_Y_OFFSET;
-
-  const addressInput = document.querySelector(`input[name="address"]`);
-  addressInput.value = `${ADDRESS_X} ${ADDRESS_Y}`;
+  window.activation.changeState(false);
 
   /**
   * по нажатию левой кнопки мыши вызывает активацию страницы и заполняет значение поля адреса
@@ -55,27 +19,28 @@
   */
   const onMapPinClick = function (evt) {
     if (evt.button === 0) {
-      changeState(true);
+      window.activation.changeState(true);
       window.backend.load(successHandlerLoad, errorHandlerLoad);
-      addressInput.value = `${ADDRESS_X} ${ADDRESS_Y + MAP_PIN_ACTIVE_Y_OFFSET}`;
+      window.activation.addressInput.value = `${window.activation.ADDRESS_X} ${window.activation.ADDRESS_Y + window.pinMove.MAP_PIN_ACTIVE_Y_OFFSET}`;
     }
   };
 
   /**
-  * по нажатию клавиши Enter вызывает активацию страницы и заполняет значение поля адреса
-  * @param {Object} evt - объект-событие
-  */
+* по нажатию клавиши Enter вызывает активацию страницы и заполняет значение поля адреса
+* @param {Object} evt - объект-событие
+*/
   const onMapPinKeyPress = function (evt) {
     if (evt.key === `Enter`) {
-      changeState(true);
+      window.activation.changeState(true);
       window.backend.load(successHandlerLoad, errorHandlerLoad);
-      addressInput.value = `${ADDRESS_X} ${ADDRESS_Y + MAP_PIN_ACTIVE_Y_OFFSET}`;
+      window.activation.addressInput.value = `${window.activation.ADDRESS_X} ${window.activation.ADDRESS_Y + window.pinMove.MAP_PIN_ACTIVE_Y_OFFSET}`;
     }
   };
 
-  mapPinMain.addEventListener(`mousedown`, onMapPinClick);
   mapPinMain.addEventListener(`keydown`, onMapPinKeyPress);
-  const mapPins = document.querySelector(`.map__pins`);
+  mapPinMain.addEventListener(`mousedown`, window.pinMove.pinMainMove);
+  mapPinMain.addEventListener(`mousedown`, onMapPinClick);
+
 
   /**
    * отображает данные (похожие объявления) при успешной загрузке
@@ -87,7 +52,6 @@
     window.filter.housingTypeElement.addEventListener(`change`, function (evt) {
       window.filter.byHousingType(evt, announcements);
     });
-
 
     mapPins.addEventListener(`click`, function (evt) {
       window.render.renderCards(evt, announcements);
@@ -118,5 +82,10 @@
     node.textContent = errorMessage;
 
     mapPins.appendChild(node);
+  };
+
+  window.main = {
+    onMapPinClick: onMapPinClick,
+    onMapPinKeyPress: onMapPinKeyPress
   };
 }());

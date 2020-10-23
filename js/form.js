@@ -56,11 +56,11 @@
   });
 
   const PriceLimit = {
-    flat: `1000`,
+    flat: 1000,
     bungalow: `0`,
-    house: `5000`,
-    palace: `10000`,
-    max: `1000000`
+    house: 5000,
+    palace: 10000,
+    max: 1000000
   };
 
   /**
@@ -69,8 +69,8 @@
   const checkPrice = function () {
     let valueMax = priceInput.value;
     if (valueMax > PriceLimit.max) {
-      priceInput.setCustomValidity(`Максимальная значение - ${PriceLimit.max}`);
-    } else {
+      priceInput.setCustomValidity(`Максимальное значение - ${PriceLimit.max}`);
+    } else if (valueMax < PriceLimit.max) {
       priceInput.setCustomValidity(``);
     }
     priceInput.reportValidity();
@@ -89,6 +89,7 @@
    * устанавливает минимальное значение цены в зависимости от типа жилья
    */
   const checkPricefromType = function () {
+    priceInput.value = ``;
     if (PriceLimit[`${typeInput.value}`]) {
       priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
       priceInput.placeholder = PriceLimit[typeInput.value];
