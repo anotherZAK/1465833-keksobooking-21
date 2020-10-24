@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+
+  /**
+   * Загружает данные от сервера
+   * @param {Object} onSuccess - функция, выполняемая в случае успешной загрузки
+   * @param {Object} onError - функция, выполняемая в случае неуспешной загрузки
+   */
   const load = function (onSuccess, onError) {
     const URL = `https://21.javascript.pages.academy/keksobooking/data`;
     const TIMEOUT = 1500;

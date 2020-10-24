@@ -2,6 +2,7 @@
 
 (function () {
   const NUMBER_OF_ADVERTISEMENT = 8;
+
   /**
  * формирует моки для тестирования
  * @param {number} indexNumber - порядковый индекс изображений
