@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   const MAX_NUMBER_OF_ANNOUNCEMENT = 5;
   const mapPins = document.querySelector(`.map__pins`);
   const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
@@ -66,15 +67,17 @@
     for (let i = 0; i < takeNumber; i++) {
       pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(shuffleData[i]));
     }
-    const pinMain = mapPins.querySelector(`.map__pin--main`);
 
-    mapPins.textContent = ``;
-    mapPins.appendChild(pinMain);
+    const pins = document.querySelectorAll(`.map__pin`);
+    for (let i = 1; i < pins.length; i++) {
+      pins[i].remove();
+    }
+
     mapPins.appendChild(pinsContainer);
   };
 
   window.render = {
-    renderCards: renderCards,
-    renderPins: renderPins
+    cards: renderCards,
+    pins: renderPins
   };
 }());

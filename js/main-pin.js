@@ -2,17 +2,16 @@
 
 (function () {
 
-  const mapPinMain = document.querySelector(`.map__pin--main`);
-  const MAP_PIN_HALF_WIDTH = Math.floor(mapPinMain.offsetWidth / 2);
-  const MAP_PIN_HALF_HEIGHT = Math.floor(mapPinMain.offsetHeight / 2);
-  const MAP_PIN_ACTIVE_Y_OFFSET = Math.floor(parseInt(getComputedStyle(mapPinMain, `::after`).height, 10));
-
   const BorderLimits = {
-    X_MAX: 1200 - MAP_PIN_HALF_WIDTH,
-    X_MIN: -MAP_PIN_HALF_WIDTH,
-    Y_MAX: 630 - MAP_PIN_HALF_HEIGHT - MAP_PIN_ACTIVE_Y_OFFSET,
-    Y_MIN: 130 - MAP_PIN_HALF_HEIGHT - MAP_PIN_ACTIVE_Y_OFFSET
+    X_MAX: 1200 - window.activation.MainPin.halfWidth,
+    X_MIN: -window.activation.MainPin.halfWidth,
+    Y_MAX: 630 - window.activation.MainPin.halfHeight - window.activation.MainPin.markerOffset,
+    Y_MIN: 130 - window.activation.MainPin.halfHeight - window.activation.MainPin.markerOffset
   };
+
+  const map = document.querySelector(`.map__pins`);
+  const mapPinMain = document.querySelector(`.map__pin--main`);
+  const absoluteLeftShift = map.getBoundingClientRect().left;
 
   /**
    * проверяет и устанавливает предельные значения (границы) координат метки
@@ -24,11 +23,15 @@
       mapPinMain.style.left = `${BorderLimits.X_MAX}px`;
     } else if (x < BorderLimits.X_MIN) {
       mapPinMain.style.left = `${BorderLimits.X_MIN}px`;
+    } else {
+      mapPinMain.style.left = `${x}px`;
     }
     if (y > BorderLimits.Y_MAX) {
       mapPinMain.style.top = `${BorderLimits.Y_MAX}px`;
     } else if (y < BorderLimits.Y_MIN) {
       mapPinMain.style.top = `${BorderLimits.Y_MIN}px`;
+    } else {
+      mapPinMain.style.top = `${y}px`;
     }
   };
 
@@ -36,12 +39,11 @@
    * осуществляет передвижение метки
    * @param {Object} evt - объект-событие
    */
-  const pinMainMove = function (evt) {
+  const onMove = function (evt) {
     if (evt.button === 0) {
       evt.preventDefault();
 
       mapPinMain.style.zIndex = 100;
-      const absoluteLeftShift = parseInt(getComputedStyle(document.body).marginLeft, 10);
       let shiftX = evt.clientX - mapPinMain.getBoundingClientRect().left;
       let shiftY = evt.clientY - mapPinMain.getBoundingClientRect().top;
 
@@ -53,8 +55,6 @@
       const moveAt = function (pageX, pageY) {
         let currentX = pageX - absoluteLeftShift - shiftX;
         let currentY = pageY - shiftY;
-        mapPinMain.style.left = currentX + `px`;
-        mapPinMain.style.top = currentY + `px`;
         checkBorders(currentX, currentY);
       };
 
@@ -64,9 +64,9 @@
        */
       const onMouseMove = function (moveEvt) {
         moveAt(moveEvt.pageX, moveEvt.pageY);
-        window.activation.ADDRESS_X = Math.floor(parseInt(mapPinMain.style.left, 10) + mapPinMain.offsetWidth / 2);
-        window.activation.ADDRESS_Y = Math.floor(parseInt(mapPinMain.style.top, 10) + mapPinMain.offsetHeight / 2 + MAP_PIN_ACTIVE_Y_OFFSET);
-        window.activation.addressInput.value = `${window.activation.ADDRESS_X} ${window.activation.ADDRESS_Y}`;
+        let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + window.activation.MainPin.halfWidth;
+        let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + window.activation.MainPin.halfHeight + window.activation.MainPin.markerOffset;
+        window.form.setAddress(ADDRESS_X, ADDRESS_Y);
       };
 
       document.addEventListener(`mousemove`, onMouseMove);
@@ -76,8 +76,7 @@
     }
   };
 
-  window.pinMove = {
-    MAP_PIN_ACTIVE_Y_OFFSET: MAP_PIN_ACTIVE_Y_OFFSET,
-    pinMainMove: pinMainMove
+  window.mainPin = {
+    onMove: onMove
   };
 }());

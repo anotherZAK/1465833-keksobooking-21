@@ -2,26 +2,29 @@
 
 (function () {
 
-  const AD_FORM_ELEMENTS = [
-    `.ad-form__element`,
-    `.ad-form-header`,
-  ];
+  const MainPin = {
+    halfWidth: 32,
+    halfHeight: 32,
+    markerOffset: 21
+  };
 
   const mapBlock = document.querySelector(`.map`);
   const adForm = document.querySelector(`.ad-form`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
-  const adFormElements = document.querySelectorAll(AD_FORM_ELEMENTS);
-  const addressInput = document.querySelector(`input[name="address"]`);
+  const adFormElements = document.querySelectorAll(`.ad-form__element, .ad-form-header`);
 
-  const MAP_PIN_HALF_WIDTH = Math.floor(mapPinMain.offsetWidth / 2);
-  const MAP_PIN_HALF_HEIGHT = Math.floor(mapPinMain.offsetHeight / 2);
+  let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + MainPin.halfWidth;
+  let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + MainPin.halfHeight;
 
   /**
   * переключает страницу между активным и неактивным состоянием
   * @param {boolean} flag - признак переключения
   */
-  const changeState = function (flag) {
+  const activatePage = function (flag) {
     if (flag) {
+      window.form.setAddress(ADDRESS_X, ADDRESS_Y + MainPin.markerOffset);
+      window.backend.load(window.backend.successHandlerLoad, window.backend.errorHandlerLoad);
+
       adFormElements.forEach(function (item) {
         item.removeAttribute(`disabled`);
       });
@@ -30,6 +33,7 @@
       mapPinMain.removeEventListener(`mousedown`, window.main.onMapPinClick);
       mapPinMain.removeEventListener(`keydown`, window.main.onMapPinKeyPress);
     } else {
+      window.form.setAddress(ADDRESS_X, ADDRESS_Y);
       adFormElements.forEach(function (item) {
         item.setAttribute(`disabled`, `disabled`);
       });
@@ -37,15 +41,8 @@
     }
   };
 
-  let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + MAP_PIN_HALF_WIDTH;
-  let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + MAP_PIN_HALF_HEIGHT;
-
-  addressInput.value = `${ADDRESS_X} ${ADDRESS_Y}`;
-
   window.activation = {
-    ADDRESS_X: ADDRESS_X,
-    ADDRESS_Y: ADDRESS_Y,
-    addressInput: addressInput,
-    changeState: changeState
+    MainPin: MainPin,
+    activatePage: activatePage
   };
 }());

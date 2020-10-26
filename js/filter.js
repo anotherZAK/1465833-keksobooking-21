@@ -16,7 +16,7 @@
       }
       return data;
     });
-    window.render.renderPins(announcementsFilterByType);
+    window.render.pins(announcementsFilterByType);
   };
 
   window.filter = {
