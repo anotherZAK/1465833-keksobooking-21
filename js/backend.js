@@ -1,9 +1,10 @@
 'use strict';
 
 (function () {
-
+  const DEBOUNCE_INTERVAL = 500;
   const mapPins = document.querySelector(`.map__pins`);
   const mapFormElements = document.querySelectorAll(`.map__filter, .map__features`);
+  const mapFilters = document.querySelector(`.map__filters`);
 
   /**
    * Загружает данные от сервера
@@ -47,11 +48,15 @@
    * @param {Array} announcements - массив объектов с данными
    */
   const successHandlerLoad = function (announcements) {
-    window.render.pins(announcements);
+    const limitAnnouncements = window.filter.filterData(announcements);
+    window.render.pins(limitAnnouncements);
 
-    window.filter.housingTypeElement.addEventListener(`change`, function (evt) {
-      window.filter.byHousingType(evt, announcements);
-    });
+    const onFilterFormChange = window.util.debounce(function () {
+      const filteresAnnouncements = window.filter.filterData(announcements);
+      window.render.pins(filteresAnnouncements);
+    }, DEBOUNCE_INTERVAL);
+
+    mapFilters.addEventListener(`change`, onFilterFormChange);
 
     mapPins.addEventListener(`click`, function (evt) {
       window.render.cards(evt, announcements);

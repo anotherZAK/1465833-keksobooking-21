@@ -2,7 +2,6 @@
 
 (function () {
 
-  const MAX_NUMBER_OF_ANNOUNCEMENT = 5;
   const mapPins = document.querySelector(`.map__pins`);
   const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
   const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
@@ -58,14 +57,9 @@
    * @param {Object} data - массив объектов с данными
    */
   const renderPins = function (data) {
-    const shuffleData = window.util.shuffleArray(data);
-    const takeNumber = data.length > MAX_NUMBER_OF_ANNOUNCEMENT
-      ? MAX_NUMBER_OF_ANNOUNCEMENT
-      : data.length;
-
     const pinsContainer = document.createDocumentFragment();
-    for (let i = 0; i < takeNumber; i++) {
-      pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(shuffleData[i]));
+    for (let i = 0; i < data.length; i++) {
+      pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(data[i]));
     }
 
     const pins = document.querySelectorAll(`.map__pin`);
