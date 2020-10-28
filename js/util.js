@@ -2,6 +2,8 @@
 
 (function () {
 
+  const DEBOUNCE_INTERVAL = 500;
+
   /**
    * перемешивает массив по алгоритму Фишера-Йетса
    * @param {Array} array - исходный массив
@@ -18,18 +20,15 @@
   };
 
   /**
- * задерживает выполнение функции на время не менее delay
- * @param {Object} func - функция, для которой устанавливается задержка
- * @param {number} delay - время задержки в мс
- * @return {Object} - функция, исполняемая не чаще чем delay
+ * задерживает выполнение функции на время не менее DEBOUNCE_INTERVAL
+ * @param {Object} callback - функция, для которой устанавливается задержка
+ * @return {Object} - функция, исполняемая не чаще чем DEBOUNCE_INTERVAL
  */
-  const debounce = function (func, delay) {
-    let lastTimeout;
-
-    return function (args) {
-      const boundFunc = func.bind(null, args);
-      clearTimeout(lastTimeout);
-      lastTimeout = setTimeout(boundFunc, delay);
+  const debounce = function (callback) {
+    let timeout;
+    return function (argument) {
+      clearTimeout(timeout);
+      timeout = setTimeout(callback, DEBOUNCE_INTERVAL, argument);
     };
   };
 

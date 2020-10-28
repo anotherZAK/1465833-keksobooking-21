@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  const DEBOUNCE_INTERVAL = 500;
+
   const mapPins = document.querySelector(`.map__pins`);
   const mapFormElements = document.querySelectorAll(`.map__filter, .map__features`);
   const mapFilters = document.querySelector(`.map__filters`);
@@ -54,7 +54,7 @@
     const onFilterFormChange = window.util.debounce(function () {
       const filteresAnnouncements = window.filter.filterData(announcements);
       window.render.pins(filteresAnnouncements);
-    }, DEBOUNCE_INTERVAL);
+    });
 
     mapFilters.addEventListener(`change`, onFilterFormChange);
 
