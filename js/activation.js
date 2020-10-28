@@ -13,6 +13,7 @@
   const mapFilters = document.querySelector(`.map__filters`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const adFormElements = document.querySelectorAll(`.ad-form__element, .ad-form-header`);
+  const mapFiltersElements = mapFilters.querySelectorAll(`.map__filter, .map__checkbox`);
 
   let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + MainPin.halfWidth;
   let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + MainPin.halfHeight;
@@ -25,6 +26,9 @@
     window.backend.load(window.util.successHandlerLoad, window.util.errorHandlerLoad);
 
     adFormElements.forEach(function (item) {
+      item.removeAttribute(`disabled`);
+    });
+    mapFiltersElements.forEach(function (item) {
       item.removeAttribute(`disabled`);
     });
     mapBlock.classList.remove(`map--faded`);
@@ -52,6 +56,9 @@
     window.form.setAddress(ADDRESS_X, ADDRESS_Y);
 
     adFormElements.forEach(function (item) {
+      item.setAttribute(`disabled`, `disabled`);
+    });
+    mapFiltersElements.forEach(function (item) {
       item.setAttribute(`disabled`, `disabled`);
     });
   };
