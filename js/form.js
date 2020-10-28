@@ -15,8 +15,8 @@
   };
 
   const PriceLimit = {
-    flat: 1000,
     bungalow: `0`,
+    flat: 1000,
     house: 5000,
     palace: 10000,
     max: 1000000
@@ -25,7 +25,7 @@
   const addressInput = document.querySelector(`input[name="address"]`);
   const roomsInput = document.querySelector(`select[name="rooms"]`);
   const capacityInput = document.querySelector(`select[name="capacity"]`);
-  addressInput.setAttribute(`disabled`, `disabled`);
+  addressInput.setAttribute(`readonly`, ``);
 
   /**
    * заполняет поле "Адрес" формы на странице
@@ -124,6 +124,7 @@
       });
     }
   }
+
   window.form = {
     setAddress: setAddress
   };
