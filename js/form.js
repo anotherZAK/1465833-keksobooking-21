@@ -10,22 +10,22 @@
   };
 
   const TitleLength = {
-    min: 30,
-    max: 100
+    MIN: 30,
+    MAX: 100
   };
 
   const PriceLimit = {
-    flat: 1000,
-    bungalow: `0`,
-    house: 5000,
-    palace: 10000,
-    max: 1000000
+    BUNGALOW: `0`,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000,
+    MAX: 1000000
   };
 
   const addressInput = document.querySelector(`input[name="address"]`);
   const roomsInput = document.querySelector(`select[name="rooms"]`);
   const capacityInput = document.querySelector(`select[name="capacity"]`);
-  addressInput.setAttribute(`disabled`, `disabled`);
+  addressInput.setAttribute(`readonly`, ``);
 
   /**
    * заполняет поле "Адрес" формы на странице
@@ -60,10 +60,10 @@
    */
   const checkTitleLength = function () {
     let valueLength = titleInput.value.length;
-    if (valueLength < TitleLength.min) {
-      titleInput.setCustomValidity(`Минимальная длина заголовка объявления -  ${TitleLength.min} символов. Осталось ввести ${TitleLength.min - titleInput.value.length}`);
-    } else if (valueLength > TitleLength.max) {
-      titleInput.setCustomValidity(`Максимальная длина заголовка объявления -  ${TitleLength.max} символов. Удалите ${titleInput.value.length - TitleLength.max}`);
+    if (valueLength < TitleLength.MIN) {
+      titleInput.setCustomValidity(`Минимальная длина заголовка объявления -  ${TitleLength.MIN} символов. Осталось ввести ${TitleLength.MIN - titleInput.value.length}`);
+    } else if (valueLength > TitleLength.MAX) {
+      titleInput.setCustomValidity(`Максимальная длина заголовка объявления -  ${TitleLength.MAX} символов. Удалите ${titleInput.value.length - TitleLength.MAX}`);
     } else {
       titleInput.setCustomValidity(``);
     }
@@ -80,9 +80,9 @@
  */
   const checkPrice = function () {
     let valueMax = priceInput.value;
-    if (valueMax > PriceLimit.max) {
-      priceInput.setCustomValidity(`Максимальное значение - ${PriceLimit.max}`);
-    } else if (valueMax < PriceLimit.max) {
+    if (valueMax > PriceLimit.MAX) {
+      priceInput.setCustomValidity(`Максимальное значение - ${PriceLimit.MAX}`);
+    } else if (valueMax < PriceLimit.MAX) {
       priceInput.setCustomValidity(``);
     }
     priceInput.reportValidity();
@@ -124,6 +124,7 @@
       });
     }
   }
+
   window.form = {
     setAddress: setAddress
   };

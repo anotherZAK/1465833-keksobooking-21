@@ -62,10 +62,7 @@
       pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(data[i]));
     }
 
-    const pins = document.querySelectorAll(`.map__pin`);
-    for (let i = 1; i < pins.length; i++) {
-      pins[i].remove();
-    }
+    window.util.removePins();
 
     mapPins.appendChild(pinsContainer);
   };

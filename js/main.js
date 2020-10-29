@@ -3,35 +3,33 @@
 (function () {
 
   const mapPinMain = document.querySelector(`.map__pin--main`);
+  const adForm = document.querySelector(`.ad-form`);
+  const adFormReset = adForm.querySelector(`.ad-form__reset`);
 
-  window.activation.activatePage(false);
+  window.activation.deactivatePage();
 
-  /**
-  * по нажатию левой кнопки мыши вызывает активацию страницы и заполняет значение поля адреса
-  * @param {Object} evt - объект-событие
-  */
-  const onMapPinClick = function (evt) {
-    if (evt.button === 0) {
-      window.activation.activatePage(true);
-    }
-  };
-
-  /**
-* по нажатию клавиши Enter вызывает активацию страницы и заполняет значение поля адреса
-* @param {Object} evt - объект-событие
-*/
-  const onMapPinKeyPress = function (evt) {
-    if (evt.key === `Enter`) {
-      window.activation.activatePage(true);
-    }
-  };
-
-  mapPinMain.addEventListener(`keydown`, onMapPinKeyPress);
+  mapPinMain.addEventListener(`keydown`, window.activation.onMapPinKeyPress);
   mapPinMain.addEventListener(`mousedown`, window.mainPin.onMove);
-  mapPinMain.addEventListener(`mousedown`, onMapPinClick);
+  mapPinMain.addEventListener(`mousedown`, window.activation.onMapPinClick);
 
-  window.main = {
-    onMapPinClick: onMapPinClick,
-    onMapPinKeyPress: onMapPinKeyPress
+  /**
+   * функция-обработчик, отправляет данные формы на сервер
+   * @param {Object} evt - объект-событие
+   */
+  const onAdFormSubmit = function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(adForm), window.util.successHandlerSubmit, window.util.errorHandlerSubmit);
   };
+
+  /**
+   * функция-обработчик, переводит страницу в неактивное состояние
+   * @param {Object} evt - объект-событие
+   */
+  const onAdFormReset = function (evt) {
+    evt.preventDefault();
+    window.activation.deactivatePage();
+  };
+
+  adForm.addEventListener(`submit`, onAdFormSubmit);
+  adFormReset.addEventListener(`click`, onAdFormReset);
 }());
