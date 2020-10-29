@@ -1,6 +1,14 @@
 'use strict';
 
 (function () {
+
+  const HouseType = {
+    palace: `Дворец`,
+    flat: `Квартира`,
+    house: `Дом`,
+    bungalow: `Бунгало`
+  };
+
   const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
   const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
   const similarPopupTemplate = document.querySelector(`#card`).content;
@@ -58,21 +66,8 @@
       popupPrice.remove();
     }
 
-    if (announcement.offer.type) {
-      switch (announcement.offer.type) {
-        case `palace`:
-          popupType.textContent = `Дворец`;
-          break;
-        case `flat`:
-          popupType.textContent = `Квартира`;
-          break;
-        case `house`:
-          popupType.textContent = `Дом`;
-          break;
-        case `bungalow`:
-          popupType.textContent = `Бунгало`;
-          break;
-      }
+    if (Object.keys(HouseType).includes(announcement.offer.type)) {
+      popupType.textContent = HouseType[announcement.offer.type];
     } else {
       popupType.remove();
     }

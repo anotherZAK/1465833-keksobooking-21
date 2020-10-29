@@ -1,21 +1,46 @@
 'use strict';
 
 (function () {
-  const roomsInput = document.querySelector(`select[name="rooms"]`);
-  const capacityInput = document.querySelector(`select[name="capacity"]`);
 
-  const GUESTS_CAPACITY = {
+  const GuestsCapacity = {
     1: [`1`],
     2: [`1`, `2`],
     3: [`1`, `2`, `3`],
     100: [`0`]
   };
 
+  const TitleLength = {
+    min: 30,
+    max: 100
+  };
+
+  const PriceLimit = {
+    flat: 1000,
+    bungalow: `0`,
+    house: 5000,
+    palace: 10000,
+    max: 1000000
+  };
+
+  const addressInput = document.querySelector(`input[name="address"]`);
+  const roomsInput = document.querySelector(`select[name="rooms"]`);
+  const capacityInput = document.querySelector(`select[name="capacity"]`);
+  addressInput.setAttribute(`disabled`, `disabled`);
+
+  /**
+   * заполняет поле "Адрес" формы на странице
+   * @param {number} ADDRESS_X - значение адреса по оси x
+   * @param {number} ADDRESS_Y - значение адреса по оси y
+   */
+  const setAddress = function (ADDRESS_X, ADDRESS_Y) {
+    addressInput.value = `${ADDRESS_X}, ${ADDRESS_Y}`;
+  };
+
   /**
   * проверяет, сколько гостей можно пригласить
   */
   const checkGuestsCapacity = function () {
-    if (GUESTS_CAPACITY[roomsInput.value].includes(capacityInput.value)) {
+    if (GuestsCapacity[roomsInput.value].includes(capacityInput.value)) {
       capacityInput.setCustomValidity(``);
     } else {
       capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
@@ -29,11 +54,6 @@
   roomsInput.addEventListener(`change`, function () {
     checkGuestsCapacity();
   });
-
-  const TitleLength = {
-    min: 30,
-    max: 100
-  };
 
   /**
    * проверяет длину заголовка объявления
@@ -54,14 +74,6 @@
   titleInput.addEventListener(`input`, function () {
     checkTitleLength();
   });
-
-  const PriceLimit = {
-    flat: 1000,
-    bungalow: `0`,
-    house: 5000,
-    palace: 10000,
-    max: 1000000
-  };
 
   /**
  * проверяет максимально допустимое значение цены объявления
@@ -112,5 +124,7 @@
       });
     }
   }
-
+  window.form = {
+    setAddress: setAddress
+  };
 }());

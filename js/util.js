@@ -2,33 +2,7 @@
 
 (function () {
 
-  /**
- * выбирает случайное число из заданного диапазона
- * @param {number} max - верхний предел
- * @param {number} min - нижний предел
- * @return {number} - случайное число
- */
-  const getRandomNumber = function (max, min = 0) {
-    let randomNumber = 0;
-    randomNumber = Math.floor(Math.random() * (max - min)) + min;
-
-    return randomNumber;
-  };
-
-  /**
-   * выбирает случайный индекс массива
-   * @param {Array} array - исходный массив или верхний диапазон
-   * @param {number} min - диапазон
-   * @return {number} - случайный индекс
-   */
-
-  const getRandomIndex = function (array) {
-    let randomIndex = 0;
-    const arrayLength = array.length;
-    randomIndex = Math.floor(Math.random() * arrayLength);
-
-    return randomIndex;
-  };
+  const DEBOUNCE_INTERVAL = 500;
 
   /**
    * перемешивает массив по алгоритму Фишера-Йетса
@@ -46,18 +20,20 @@
   };
 
   /**
-   * выбирает случайный элемент из массива
-   * @param {Array} array - исходный массив
-   * @return {number} - случайный элемент массива
-   */
-  const getRandomElementFromArray = function (array) {
-    return array[getRandomIndex(array)];
+ * задерживает выполнение функции на время не менее DEBOUNCE_INTERVAL
+ * @param {Object} callback - функция, для которой устанавливается задержка
+ * @return {Object} - функция, исполняемая не чаще чем DEBOUNCE_INTERVAL
+ */
+  const debounce = function (callback) {
+    let timeout;
+    return function (argument) {
+      clearTimeout(timeout);
+      timeout = setTimeout(callback, DEBOUNCE_INTERVAL, argument);
+    };
   };
 
   window.util = {
-    getRandomNumber: getRandomNumber,
-    getRandomIndex: getRandomIndex,
     shuffleArray: shuffleArray,
-    getRandomElementFromArray: getRandomElementFromArray,
+    debounce: debounce
   };
 }());
