@@ -122,8 +122,26 @@
     return popupElement;
   };
 
+  /**
+   * формирует разметку для изображения
+   * @param {Object} element - блок для вывода изображения
+   * @param {Object} readerObject - экземпляр FileReader
+   */
+  const makeHtmlPreview = function (element, readerObject) {
+    if (element.tagName === `DIV`) {
+      let previewImg = document.createElement(`img`);
+      previewImg.style.width = getComputedStyle(element).width;
+      previewImg.alt = `Фотография жилья`;
+      previewImg.src = readerObject.result;
+      element.appendChild(previewImg);
+    } else {
+      element.src = readerObject.result;
+    }
+  };
+
   window.markup = {
-    makeHtmlAnnouncement: makeHtmlAnnouncement,
-    makeHtmlPopup: makeHtmlPopup
+    makeHtmlAnnouncement,
+    makeHtmlPopup,
+    makeHtmlPreview
   };
 }());

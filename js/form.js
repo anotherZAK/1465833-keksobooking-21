@@ -15,16 +15,28 @@
   };
 
   const PriceLimit = {
-    BUNGALOW: `0`,
-    FLAT: 1000,
-    HOUSE: 5000,
-    PALACE: 10000,
-    MAX: 1000000
+    bungalow: `0`,
+    flat: 1000,
+    house: 5000,
+    palace: 10000,
+    max: 1000000
   };
+
+  const availablePreviewFormats = [
+    `jpg`,
+    `jpeg`,
+    `png`
+  ];
 
   const addressInput = document.querySelector(`input[name="address"]`);
   const roomsInput = document.querySelector(`select[name="rooms"]`);
   const capacityInput = document.querySelector(`select[name="capacity"]`);
+
+  const userAvatarChooser = document.querySelector(`.ad-form-header__input`);
+  const userAvatarPreview = document.querySelector(`.ad-form-header__preview > img`);
+  const userHousePhotoChooser = document.querySelector(`.ad-form__input`);
+  const userHousePhotoPreview = document.querySelector(`.ad-form__photo`);
+
   addressInput.setAttribute(`readonly`, ``);
 
   /**
@@ -80,9 +92,9 @@
  */
   const checkPrice = function () {
     let valueMax = priceInput.value;
-    if (valueMax > PriceLimit.MAX) {
-      priceInput.setCustomValidity(`Максимальное значение - ${PriceLimit.MAX}`);
-    } else if (valueMax < PriceLimit.MAX) {
+    if (valueMax > PriceLimit.max) {
+      priceInput.setCustomValidity(`Максимальное значение - ${PriceLimit.max}`);
+    } else if (valueMax < PriceLimit.max) {
       priceInput.setCustomValidity(``);
     }
     priceInput.reportValidity();
@@ -125,7 +137,36 @@
     }
   }
 
+  /**
+   * устанавливает миниизображение, выбранное пользователем
+   * @param {Object} chooser - поле выбора файла
+   * @param {Object} preview - блок для вывода изображения
+   */
+  const setPreview = function (chooser, preview) {
+    let file = chooser.files[0];
+
+    const equal = availablePreviewFormats.some(function (formatItem) {
+      return file.type.endsWith(formatItem);
+    });
+
+    if (equal) {
+      let reader = new FileReader();
+      reader.addEventListener(`load`, function () {
+        window.markup.makeHtmlPreview(preview, reader);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  userAvatarChooser.addEventListener(`change`, function () {
+    setPreview(userAvatarChooser, userAvatarPreview);
+  });
+  userHousePhotoChooser.addEventListener(`change`, function () {
+    setPreview(userHousePhotoChooser, userHousePhotoPreview);
+  });
+
   window.form = {
-    setAddress: setAddress
+    setAddress
   };
 }());

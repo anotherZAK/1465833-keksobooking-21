@@ -2,6 +2,8 @@
 
 (function () {
 
+  const userAvatarDefaultSrc = `img/muffin-grey.svg`;
+
   const MainPin = {
     HALF_WIDTH: 32,
     HALF_HEIGHT: 32,
@@ -14,6 +16,9 @@
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const adFormElements = document.querySelectorAll(`.ad-form__element, .ad-form-header`);
   const mapFiltersElements = mapFilters.querySelectorAll(`.map__filter, .map__checkbox`);
+
+  const userAvatarPreview = document.querySelector(`.ad-form-header__preview > img`);
+  const userHousePhotoPreview = document.querySelector(`.ad-form__photo`);
 
   let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + MainPin.HALF_WIDTH;
   let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + MainPin.HALF_HEIGHT;
@@ -41,6 +46,11 @@
   * переключает страницу в неактивное состояние
   */
   const deactivatePage = function () {
+    userAvatarPreview.src = userAvatarDefaultSrc;
+    if (userHousePhotoPreview.firstChild) {
+      userHousePhotoPreview.firstChild.remove();
+    }
+
     mapBlock.classList.add(`map--faded`);
     adForm.classList.add(`ad-form--disabled`);
     adForm.reset();
@@ -84,10 +94,10 @@
   };
 
   window.activation = {
-    MainPin: MainPin,
-    activatePage: activatePage,
-    deactivatePage: deactivatePage,
-    onMapPinClick: onMapPinClick,
-    onMapPinKeyPress: onMapPinKeyPress
+    MainPin,
+    activatePage,
+    deactivatePage,
+    onMapPinClick,
+    onMapPinKeyPress
   };
 }());

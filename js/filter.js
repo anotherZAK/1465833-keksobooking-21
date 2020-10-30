@@ -82,6 +82,6 @@
   };
 
   window.filter = {
-    filterData: filterData
+    filterData
   };
 }());

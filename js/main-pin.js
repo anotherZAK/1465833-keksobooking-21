@@ -3,10 +3,10 @@
 (function () {
 
   const BorderLimits = {
-    X_MAX: 1200 - window.activation.MainPin.halfWidth,
-    X_MIN: -window.activation.MainPin.halfWidth,
-    Y_MAX: 630 - window.activation.MainPin.halfHeight - window.activation.MainPin.markerOffset,
-    Y_MIN: 130 - window.activation.MainPin.halfHeight - window.activation.MainPin.markerOffset
+    X_MAX: 1200 - window.activation.MainPin.HALF_WIDTH,
+    X_MIN: -window.activation.MainPin.HALF_WIDTH,
+    Y_MAX: 630 - window.activation.MainPin.HALF_HEIGHT - window.activation.MainPin.MARKER_OFFSET,
+    Y_MIN: 130 - window.activation.MainPin.HALF_HEIGHT - window.activation.MainPin.MARKER_OFFSET
   };
 
   const map = document.querySelector(`.map__pins`);
@@ -64,8 +64,8 @@
        */
       const onMouseMove = function (moveEvt) {
         moveAt(moveEvt.pageX, moveEvt.pageY);
-        let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + window.activation.MainPin.halfWidth;
-        let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + window.activation.MainPin.halfHeight + window.activation.MainPin.markerOffset;
+        let ADDRESS_X = parseInt(mapPinMain.style.left, 10) + window.activation.MainPin.HALF_WIDTH;
+        let ADDRESS_Y = parseInt(mapPinMain.style.top, 10) + window.activation.MainPin.HALF_WIDTH + window.activation.MainPin.MARKER_OFFSET;
         window.form.setAddress(ADDRESS_X, ADDRESS_Y);
       };
 
@@ -77,6 +77,6 @@
   };
 
   window.mainPin = {
-    onMove: onMove
+    onMove
   };
 }());

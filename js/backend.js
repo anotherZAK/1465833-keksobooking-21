@@ -64,7 +64,7 @@
   };
 
   window.backend = {
-    load: load,
-    save: save,
+    load,
+    save
   };
 }());

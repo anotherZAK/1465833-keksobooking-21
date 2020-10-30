@@ -152,13 +152,13 @@
   };
 
   window.util = {
-    shuffleArray: shuffleArray,
-    debounce: debounce,
-    removePins: removePins,
-    removeCard: removeCard,
-    successHandlerSubmit: successHandlerSubmit,
-    errorHandlerSubmit: errorHandlerSubmit,
-    successHandlerLoad: successHandlerLoad,
-    errorHandlerLoad: errorHandlerLoad
+    shuffleArray,
+    debounce,
+    removePins,
+    removeCard,
+    successHandlerSubmit,
+    errorHandlerSubmit,
+    successHandlerLoad,
+    errorHandlerLoad
   };
 }());
