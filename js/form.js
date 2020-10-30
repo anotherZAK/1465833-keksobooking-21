@@ -31,6 +31,11 @@
   const addressInput = document.querySelector(`input[name="address"]`);
   const roomsInput = document.querySelector(`select[name="rooms"]`);
   const capacityInput = document.querySelector(`select[name="capacity"]`);
+  const titleInput = document.querySelector(`input[name="title"]`);
+  const priceInput = document.querySelector(`input[name="price"]`);
+  const typeInput = document.querySelector(`select[name="type"]`);
+  const timeField = document.querySelector(`.ad-form__element--time`);
+  const timeInTimeOut = timeField.querySelectorAll(`select[name="timein"], select[name="timeout"]`);
 
   const userAvatarChooser = document.querySelector(`.ad-form-header__input`);
   const userAvatarPreview = document.querySelector(`.ad-form-header__preview > img`);
@@ -38,6 +43,8 @@
   const userHousePhotoPreview = document.querySelector(`.ad-form__photo`);
 
   addressInput.setAttribute(`readonly`, ``);
+  priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
+  priceInput.placeholder = PriceLimit[typeInput.value];
 
   /**
    * заполняет поле "Адрес" формы на странице
@@ -59,13 +66,8 @@
     }
   };
 
-  capacityInput.addEventListener(`change`, function () {
-    checkGuestsCapacity();
-  });
-
-  roomsInput.addEventListener(`change`, function () {
-    checkGuestsCapacity();
-  });
+  capacityInput.addEventListener(`change`, checkGuestsCapacity);
+  roomsInput.addEventListener(`change`, checkGuestsCapacity);
 
   /**
    * проверяет длину заголовка объявления
@@ -82,10 +84,7 @@
     titleInput.reportValidity();
   };
 
-  const titleInput = document.querySelector(`input[name="title"]`);
-  titleInput.addEventListener(`input`, function () {
-    checkTitleLength();
-  });
+  titleInput.addEventListener(`input`, checkTitleLength);
 
   /**
  * проверяет максимально допустимое значение цены объявления
@@ -100,14 +99,7 @@
     priceInput.reportValidity();
   };
 
-  const priceInput = document.querySelector(`input[name="price"]`);
-  const typeInput = document.querySelector(`select[name="type"]`);
-  priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
-  priceInput.placeholder = PriceLimit[typeInput.value];
-
-  priceInput.addEventListener(`input`, function () {
-    checkPrice();
-  });
+  priceInput.addEventListener(`input`, checkPrice);
 
   /**
    * устанавливает минимальное значение цены в зависимости от типа жилья
@@ -120,25 +112,22 @@
     }
   };
 
-  typeInput.addEventListener(`change`, function () {
-    checkPricefromType();
-  });
-
-  const timeInTimeOut = document.querySelectorAll(`select[name="timein"], select[name="timeout"]`);
-  for (let i = 0; i < timeInTimeOut.length; i++) {
-    if (i === 0) {
-      timeInTimeOut[i].addEventListener(`change`, function () {
-        timeInTimeOut[i + 1].value = timeInTimeOut[i].value;
-      });
-    } else {
-      timeInTimeOut[i].addEventListener(`change`, function () {
-        timeInTimeOut[i - 1].value = timeInTimeOut[i].value;
-      });
-    }
-  }
+  typeInput.addEventListener(`change`, checkPricefromType);
 
   /**
-   * устанавливает миниизображение, выбранное пользователем
+   * синхронизирует значения полей "Время заезда и выезда"
+   * @param {*} evt - объект-событие
+   */
+  const syncTime = function (evt) {
+    timeInTimeOut.forEach(function (selectItem) {
+      selectItem.value = evt.target.value;
+    });
+  };
+
+  timeField.addEventListener(`change`, syncTime);
+
+  /**
+   * устанавливает и отображает миниизображение, выбранное пользователем
    * @param {Object} chooser - поле выбора файла
    * @param {Object} preview - блок для вывода изображения
    */
