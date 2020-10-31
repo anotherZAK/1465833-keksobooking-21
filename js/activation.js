@@ -3,6 +3,7 @@
 (function () {
 
   const userAvatarDefaultSrc = `img/muffin-grey.svg`;
+  const URL_DOWNLOAD = `https://21.javascript.pages.academy/keksobooking/data`;
 
   const MainPin = {
     HALF_WIDTH: 32,
@@ -28,7 +29,9 @@
   */
   const activatePage = function () {
     window.form.setAddress(ADDRESS_X, ADDRESS_Y + MainPin.MARKER_OFFSET);
-    window.backend.load(window.util.successHandlerLoad, window.util.errorHandlerLoad);
+    window.backend.sendRequest(`GET`, URL_DOWNLOAD)
+    .then(window.util.successHandlerLoad)
+    .catch(window.util.errorHandlerLoad);
 
     adFormElements.forEach(function (item) {
       item.removeAttribute(`disabled`);

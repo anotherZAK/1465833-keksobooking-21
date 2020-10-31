@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const URL_UPLOAD = `https://21.javascript.pages.academy/keksobooking`;
 
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
@@ -18,7 +19,9 @@
    */
   const onAdFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), window.util.successHandlerSubmit, window.util.errorHandlerSubmit);
+    window.backend.sendRequest(`POST`, URL_UPLOAD, new FormData(adForm))
+    .then(window.util.successHandlerSubmit)
+    .catch(window.util.errorHandlerSubmit);
   };
 
   /**

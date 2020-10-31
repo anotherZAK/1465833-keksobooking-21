@@ -116,7 +116,7 @@
 
   /**
    * синхронизирует значения полей "Время заезда и выезда"
-   * @param {*} evt - объект-событие
+   * @param {Object} evt - объект-событие
    */
   const syncTime = function (evt) {
     timeInTimeOut.forEach(function (selectItem) {
