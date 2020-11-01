@@ -19,6 +19,10 @@
       if (mapCard) {
         mapPins.removeChild(mapCard);
       }
+      for (let i = 2; i < mapPins.children.length; i++) {
+        mapPins.children[i].classList.toggle(`map-pin--active`, false);
+      }
+      evt.target.classList.add(`map-pin--active`);
       let index = data.findIndex(function (item) {
         return item.offer.title === evt.target.firstChild.alt;
       });
@@ -26,6 +30,9 @@
     } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
       if (mapCard) {
         mapPins.removeChild(mapCard);
+      }
+      for (let i = 2; i < mapPins.children.length; i++) {
+        mapPins.children[i].classList.toggle(`map-pin--active`, false);
       }
       let index = data.findIndex(function (item) {
         return item.offer.title === evt.target.alt;
@@ -35,7 +42,6 @@
     mapPins.appendChild(cardContainer);
 
     const cardCloseButton = mapPins.querySelector(`.popup__close`);
-
     if (cardCloseButton) {
       cardCloseButton.addEventListener(`click`, function () {
         mapCard = mapPins.querySelector(`.map__card`);

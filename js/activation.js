@@ -2,7 +2,7 @@
 
 (function () {
 
-  const userAvatarDefaultSrc = `img/muffin-grey.svg`;
+  const USER_AVATAR_DEFAULT_SRC = `img/muffin-grey.svg`;
   const URL_DOWNLOAD = `https://21.javascript.pages.academy/keksobooking/data`;
 
   const MainPin = {
@@ -41,15 +41,15 @@
     });
     mapBlock.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
-    mapPinMain.removeEventListener(`mousedown`, onMapPinClick);
-    mapPinMain.removeEventListener(`keydown`, onMapPinKeyPress);
+    mapPinMain.removeEventListener(`mousedown`, onMainPinClick);
+    mapPinMain.removeEventListener(`keydown`, onMainPinKeyPress);
   };
 
   /**
   * переключает страницу в неактивное состояние
   */
   const deactivatePage = function () {
-    userAvatarPreview.src = userAvatarDefaultSrc;
+    userAvatarPreview.src = USER_AVATAR_DEFAULT_SRC;
     if (userHousePhotoPreview.firstChild) {
       userHousePhotoPreview.firstChild.remove();
     }
@@ -62,8 +62,8 @@
     window.util.removePins();
     window.util.removeCard();
 
-    mapPinMain.addEventListener(`mousedown`, onMapPinClick);
-    mapPinMain.addEventListener(`keydown`, onMapPinKeyPress);
+    mapPinMain.addEventListener(`mousedown`, onMainPinClick);
+    mapPinMain.addEventListener(`keydown`, onMainPinKeyPress);
     mapPinMain.style.left = `${ADDRESS_X - MainPin.HALF_WIDTH}px`;
     mapPinMain.style.top = `${ADDRESS_Y - MainPin.HALF_HEIGHT}px`;
     window.form.setAddress(ADDRESS_X, ADDRESS_Y);
@@ -80,7 +80,7 @@
   * по нажатию левой кнопки мыши вызывает активацию страницы и заполняет значение поля адреса
   * @param {Object} evt - объект-событие
   */
-  const onMapPinClick = function (evt) {
+  const onMainPinClick = function (evt) {
     if (evt.button === 0) {
       activatePage();
     }
@@ -90,7 +90,7 @@
 * по нажатию клавиши Enter вызывает активацию страницы и заполняет значение поля адреса
 * @param {Object} evt - объект-событие
 */
-  const onMapPinKeyPress = function (evt) {
+  const onMainPinKeyPress = function (evt) {
     if (evt.key === `Enter`) {
       activatePage();
     }
@@ -100,7 +100,7 @@
     MainPin,
     activatePage,
     deactivatePage,
-    onMapPinClick,
-    onMapPinKeyPress
+    onMainPinClick,
+    onMainPinKeyPress
   };
 }());

@@ -42,6 +42,6 @@
   };
 
   window.backend = {
-    sendRequest: sendRequest
+    sendRequest
   };
 }());

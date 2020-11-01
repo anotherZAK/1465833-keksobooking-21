@@ -9,9 +9,7 @@
 
   window.activation.deactivatePage();
 
-  mapPinMain.addEventListener(`keydown`, window.activation.onMapPinKeyPress);
   mapPinMain.addEventListener(`mousedown`, window.mainPin.onMove);
-  mapPinMain.addEventListener(`mousedown`, window.activation.onMapPinClick);
 
   /**
    * функция-обработчик, отправляет данные формы на сервер

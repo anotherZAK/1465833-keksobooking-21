@@ -48,43 +48,43 @@
     const popupAvatar = popupElement.querySelector(`.popup__avatar`);
     const popupPhotos = popupElement.querySelector(`.popup__photos`);
 
-    if (announcement.offer.title) {
+    if (announcement && announcement.offer.title) {
       popupTitle.textContent = announcement.offer.title;
     } else {
       popupTitle.remove();
     }
 
-    if (announcement.offer.address) {
+    if (announcement && announcement.offer.address) {
       popupAddress.textContent = announcement.offer.address;
     } else {
       popupAddress.remove();
     }
 
-    if (announcement.offer.price) {
+    if (announcement && announcement.offer.price) {
       popupPrice.textContent = `${announcement.offer.price} ₽/ночь`;
     } else {
       popupPrice.remove();
     }
 
-    if (Object.keys(HouseType).includes(announcement.offer.type)) {
+    if (announcement && Object.keys(HouseType).includes(announcement.offer.type)) {
       popupType.textContent = HouseType[announcement.offer.type];
     } else {
       popupType.remove();
     }
 
-    if (announcement.offer.rooms && announcement.offer.guests) {
+    if (announcement && announcement.offer.rooms && announcement.offer.guests) {
       popupGuestsCapacity.textContent = `${announcement.offer.rooms} комнаты для ${announcement.offer.guests} гостей`;
     } else {
       popupGuestsCapacity.remove();
     }
 
-    if (announcement.offer.checkin && announcement.offer.checkout) {
+    if (announcement && announcement.offer.checkin && announcement.offer.checkout) {
       popupTime.textContent = `Заезд после ${announcement.offer.checkin}, выезд до ${announcement.offer.checkout}`;
     } else {
       popupTime.remove();
     }
 
-    if (announcement.offer.features) {
+    if (announcement && announcement.offer.features) {
       popupFeatures.textContent = ``;
       announcement.offer.features.forEach(function (feature) {
         const featureElement = document.createElement(`li`);
@@ -95,7 +95,7 @@
       popupFeatures.remove();
     }
 
-    if (announcement.offer.photos) {
+    if (announcement && announcement.offer.photos) {
       const photoNode = popupPhotos.querySelector(`.popup__photo`);
       popupPhotos.textContent = ``;
       announcement.offer.photos.forEach(function (photo) {
@@ -107,13 +107,13 @@
       popupPhotos.remove();
     }
 
-    if (announcement.offer.description) {
+    if (announcement && announcement.offer.description) {
       popupDescription.textContent = announcement.offer.description;
     } else {
       popupDescription.remove();
     }
 
-    if (announcement.author.avatar) {
+    if (announcement && announcement.author.avatar) {
       popupAvatar.src = announcement.author.avatar;
     } else {
       popupAvatar.remove();

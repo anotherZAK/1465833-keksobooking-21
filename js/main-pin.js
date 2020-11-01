@@ -11,7 +11,7 @@
 
   const map = document.querySelector(`.map__pins`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
-  const absoluteLeftShift = map.getBoundingClientRect().left;
+  const mapAbsoluteLeftShift = map.getBoundingClientRect().left;
 
   /**
    * проверяет и устанавливает предельные значения (границы) координат метки
@@ -53,7 +53,7 @@
        * @param {number} pageY - расстояние от верхней границы экрана до курсора с учётом прокрутки
        */
       const moveAt = function (pageX, pageY) {
-        let currentX = pageX - absoluteLeftShift - shiftX;
+        let currentX = pageX - mapAbsoluteLeftShift - shiftX;
         let currentY = pageY - shiftY;
         checkBorders(currentX, currentY);
       };

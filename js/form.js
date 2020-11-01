@@ -56,20 +56,6 @@
   };
 
   /**
-  * проверяет, сколько гостей можно пригласить
-  */
-  const checkGuestsCapacity = function () {
-    if (GuestsCapacity[roomsInput.value].includes(capacityInput.value)) {
-      capacityInput.setCustomValidity(``);
-    } else {
-      capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
-    }
-  };
-
-  capacityInput.addEventListener(`change`, checkGuestsCapacity);
-  roomsInput.addEventListener(`change`, checkGuestsCapacity);
-
-  /**
    * проверяет длину заголовка объявления
    */
   const checkTitleLength = function () {
@@ -87,6 +73,19 @@
   titleInput.addEventListener(`input`, checkTitleLength);
 
   /**
+   * устанавливает минимальное значение цены в зависимости от типа жилья
+   */
+  const checkPricefromType = function () {
+    priceInput.value = ``;
+    if (PriceLimit[`${typeInput.value}`]) {
+      priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
+      priceInput.placeholder = PriceLimit[typeInput.value];
+    }
+  };
+
+  typeInput.addEventListener(`change`, checkPricefromType);
+
+  /**
  * проверяет максимально допустимое значение цены объявления
  */
   const checkPrice = function () {
@@ -102,19 +101,6 @@
   priceInput.addEventListener(`input`, checkPrice);
 
   /**
-   * устанавливает минимальное значение цены в зависимости от типа жилья
-   */
-  const checkPricefromType = function () {
-    priceInput.value = ``;
-    if (PriceLimit[`${typeInput.value}`]) {
-      priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
-      priceInput.placeholder = PriceLimit[typeInput.value];
-    }
-  };
-
-  typeInput.addEventListener(`change`, checkPricefromType);
-
-  /**
    * синхронизирует значения полей "Время заезда и выезда"
    * @param {Object} evt - объект-событие
    */
@@ -125,6 +111,20 @@
   };
 
   timeField.addEventListener(`change`, syncTime);
+
+  /**
+  * проверяет, сколько гостей можно пригласить
+  */
+  const checkGuestsCapacity = function () {
+    if (GuestsCapacity[roomsInput.value].includes(capacityInput.value)) {
+      capacityInput.setCustomValidity(``);
+    } else {
+      capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
+    }
+  };
+
+  capacityInput.addEventListener(`change`, checkGuestsCapacity);
+  roomsInput.addEventListener(`change`, checkGuestsCapacity);
 
   /**
    * устанавливает и отображает миниизображение, выбранное пользователем
