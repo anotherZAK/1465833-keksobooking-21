@@ -31,6 +31,11 @@
   const addressInput = document.querySelector(`input[name="address"]`);
   const roomsInput = document.querySelector(`select[name="rooms"]`);
   const capacityInput = document.querySelector(`select[name="capacity"]`);
+  const titleInput = document.querySelector(`input[name="title"]`);
+  const priceInput = document.querySelector(`input[name="price"]`);
+  const typeInput = document.querySelector(`select[name="type"]`);
+  const timeField = document.querySelector(`.ad-form__element--time`);
+  const timeInTimeOut = timeField.querySelectorAll(`select[name="timein"], select[name="timeout"]`);
 
   const userAvatarChooser = document.querySelector(`.ad-form-header__input`);
   const userAvatarPreview = document.querySelector(`.ad-form-header__preview > img`);
@@ -38,6 +43,8 @@
   const userHousePhotoPreview = document.querySelector(`.ad-form__photo`);
 
   addressInput.setAttribute(`readonly`, ``);
+  priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
+  priceInput.placeholder = PriceLimit[typeInput.value];
 
   /**
    * заполняет поле "Адрес" формы на странице
@@ -47,25 +54,6 @@
   const setAddress = function (ADDRESS_X, ADDRESS_Y) {
     addressInput.value = `${ADDRESS_X}, ${ADDRESS_Y}`;
   };
-
-  /**
-  * проверяет, сколько гостей можно пригласить
-  */
-  const checkGuestsCapacity = function () {
-    if (GuestsCapacity[roomsInput.value].includes(capacityInput.value)) {
-      capacityInput.setCustomValidity(``);
-    } else {
-      capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
-    }
-  };
-
-  capacityInput.addEventListener(`change`, function () {
-    checkGuestsCapacity();
-  });
-
-  roomsInput.addEventListener(`change`, function () {
-    checkGuestsCapacity();
-  });
 
   /**
    * проверяет длину заголовка объявления
@@ -82,10 +70,20 @@
     titleInput.reportValidity();
   };
 
-  const titleInput = document.querySelector(`input[name="title"]`);
-  titleInput.addEventListener(`input`, function () {
-    checkTitleLength();
-  });
+  titleInput.addEventListener(`input`, checkTitleLength);
+
+  /**
+   * устанавливает минимальное значение цены в зависимости от типа жилья
+   */
+  const checkPricefromType = function () {
+    priceInput.value = ``;
+    if (PriceLimit[`${typeInput.value}`]) {
+      priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
+      priceInput.placeholder = PriceLimit[typeInput.value];
+    }
+  };
+
+  typeInput.addEventListener(`change`, checkPricefromType);
 
   /**
  * проверяет максимально допустимое значение цены объявления
@@ -100,45 +98,36 @@
     priceInput.reportValidity();
   };
 
-  const priceInput = document.querySelector(`input[name="price"]`);
-  const typeInput = document.querySelector(`select[name="type"]`);
-  priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
-  priceInput.placeholder = PriceLimit[typeInput.value];
-
-  priceInput.addEventListener(`input`, function () {
-    checkPrice();
-  });
+  priceInput.addEventListener(`input`, checkPrice);
 
   /**
-   * устанавливает минимальное значение цены в зависимости от типа жилья
+   * синхронизирует значения полей "Время заезда и выезда"
+   * @param {Object} evt - объект-событие
    */
-  const checkPricefromType = function () {
-    priceInput.value = ``;
-    if (PriceLimit[`${typeInput.value}`]) {
-      priceInput.setAttribute(`min`, PriceLimit[typeInput.value]);
-      priceInput.placeholder = PriceLimit[typeInput.value];
+  const syncTime = function (evt) {
+    timeInTimeOut.forEach(function (selectItem) {
+      selectItem.value = evt.target.value;
+    });
+  };
+
+  timeField.addEventListener(`change`, syncTime);
+
+  /**
+  * проверяет, сколько гостей можно пригласить
+  */
+  const checkGuestsCapacity = function () {
+    if (GuestsCapacity[roomsInput.value].includes(capacityInput.value)) {
+      capacityInput.setCustomValidity(``);
+    } else {
+      capacityInput.setCustomValidity(`Количество гостей не более числа комнат. При выборе 100 комнат - не для гостей`);
     }
   };
 
-  typeInput.addEventListener(`change`, function () {
-    checkPricefromType();
-  });
-
-  const timeInTimeOut = document.querySelectorAll(`select[name="timein"], select[name="timeout"]`);
-  for (let i = 0; i < timeInTimeOut.length; i++) {
-    if (i === 0) {
-      timeInTimeOut[i].addEventListener(`change`, function () {
-        timeInTimeOut[i + 1].value = timeInTimeOut[i].value;
-      });
-    } else {
-      timeInTimeOut[i].addEventListener(`change`, function () {
-        timeInTimeOut[i - 1].value = timeInTimeOut[i].value;
-      });
-    }
-  }
+  capacityInput.addEventListener(`change`, checkGuestsCapacity);
+  roomsInput.addEventListener(`change`, checkGuestsCapacity);
 
   /**
-   * устанавливает миниизображение, выбранное пользователем
+   * устанавливает и отображает миниизображение, выбранное пользователем
    * @param {Object} chooser - поле выбора файла
    * @param {Object} preview - блок для вывода изображения
    */
