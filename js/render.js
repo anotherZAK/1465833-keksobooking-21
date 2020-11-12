@@ -1,77 +1,78 @@
 'use strict';
 
-(function () {
+const mapPins = document.querySelector(`.map__pins`);
+const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
+const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
 
-  const mapPins = document.querySelector(`.map__pins`);
-  const similarAdvertisementTemplate = document.querySelector(`#pin`).content;
-  const similarAdvertisementItem = similarAdvertisementTemplate.querySelector(`.map__pin`);
+/**
+ * отрисовывает карточки объявлений
+ * @param {Object} evt - объект-события
+ * @param {Object} data - массив объектов с данными
+ */
+const renderCards = function (evt, data) {
+  let mapCard = mapPins.querySelector(`.map__card`);
+  const cardContainer = document.createDocumentFragment();
 
-  /**
-   * отрисовывает карточки объявлений
-   * @param {Object} evt - объект-события
-   * @param {Object} data - массив объектов с данными
-   */
-  const renderCards = function (evt, data) {
-    let mapCard = mapPins.querySelector(`.map__card`);
-    const cardContainer = document.createDocumentFragment();
+  if (evt.target.classList.value === similarAdvertisementItem.classList.value) {
+    if (mapCard) {
+      mapPins.removeChild(mapCard);
+    }
+    for (let i = 2; i < mapPins.children.length; i++) {
+      mapPins.children[i].classList.toggle(`map-pin--active`, false);
+    }
+    evt.target.classList.add(`map-pin--active`);
+    let index = data.findIndex(function (item) {
+      return item.offer.title === evt.target.firstChild.alt;
+    });
+    cardContainer.appendChild(window.markup.makeHtmlPopup(data[index]));
+  } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
+    if (mapCard) {
+      mapPins.removeChild(mapCard);
+    }
+    for (let i = 2; i < mapPins.children.length; i++) {
+      mapPins.children[i].classList.toggle(`map-pin--active`, false);
+    }
+    let index = data.findIndex(function (item) {
+      return item.offer.title === evt.target.alt;
+    });
+    cardContainer.appendChild(window.markup.makeHtmlPopup(data[index]));
+  }
+  mapPins.appendChild(cardContainer);
 
-    if (evt.target.classList.value === similarAdvertisementItem.classList.value) {
+  const cardCloseButton = mapPins.querySelector(`.popup__close`);
+  if (cardCloseButton) {
+    cardCloseButton.addEventListener(`click`, function () {
+      mapCard = mapPins.querySelector(`.map__card`);
       if (mapCard) {
         mapPins.removeChild(mapCard);
       }
-      let index = data.findIndex(function (item) {
-        return item.offer.title === evt.target.firstChild.alt;
-      });
-      cardContainer.appendChild(window.markup.makeHtmlPopup(data[index]));
-    } else if (!evt.target.classList.value && (evt.target.alt !== `Метка объявления`)) {
-      if (mapCard) {
+    });
+    document.addEventListener(`keydown`, function (event) {
+      mapCard = mapPins.querySelector(`.map__card`);
+      if (event.key === `Escape` && mapCard) {
         mapPins.removeChild(mapCard);
       }
-      let index = data.findIndex(function (item) {
-        return item.offer.title === evt.target.alt;
-      });
-      cardContainer.appendChild(window.markup.makeHtmlPopup(data[index]));
-    }
-    mapPins.appendChild(cardContainer);
+    });
+  }
+};
 
-    const cardCloseButton = mapPins.querySelector(`.popup__close`);
+/**
+ * отрисовывает метки объявлений
+ * @param {Object} data - массив объектов с данными
+ */
+const renderPins = function (data) {
+  const pinsContainer = document.createDocumentFragment();
+  for (let i = 0; i < data.length; i++) {
+    pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(data[i]));
+  }
 
-    if (cardCloseButton) {
-      cardCloseButton.addEventListener(`click`, function () {
-        mapCard = mapPins.querySelector(`.map__card`);
-        if (mapCard) {
-          mapPins.removeChild(mapCard);
-        }
-      });
-      document.addEventListener(`keydown`, function (event) {
-        mapCard = mapPins.querySelector(`.map__card`);
-        if (event.key === `Escape` && mapCard) {
-          mapPins.removeChild(mapCard);
-        }
-      });
-    }
-  };
+  window.util.removePins();
 
-  /**
-   * отрисовывает метки объявлений
-   * @param {Object} data - массив объектов с данными
-   */
-  const renderPins = function (data) {
-    const pinsContainer = document.createDocumentFragment();
-    for (let i = 0; i < data.length; i++) {
-      pinsContainer.appendChild(window.markup.makeHtmlAnnouncement(data[i]));
-    }
+  mapPins.appendChild(pinsContainer);
+};
 
-    const pins = document.querySelectorAll(`.map__pin`);
-    for (let i = 1; i < pins.length; i++) {
-      pins[i].remove();
-    }
+window.render = {
+  cards: renderCards,
+  pins: renderPins
+};
 
-    mapPins.appendChild(pinsContainer);
-  };
-
-  window.render = {
-    cards: renderCards,
-    pins: renderPins
-  };
-}());
